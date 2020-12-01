@@ -1,0 +1,202 @@
+import discord
+import json
+from collections import OrderedDict
+import random
+import sys
+
+TOKEN_PATH = './token.txt'
+
+TOKEN = 'YOUR TOKEN'
+DEBUG_FLAG = False
+contest_max_abc = 190
+contest_max_arc = 60
+contest_max_agc = 40
+
+client = discord.Client()
+
+def get_contest_kind():
+  n = random.randint(1,10000)
+  div = 6
+  brg = n%div
+  log(brg)
+
+  contest_kind = 'a'
+  if brg == 0:
+    contest_kind += 'g'
+  elif brg == 1 or brg == 2 :
+    contest_kind += 'r'
+  else:
+    contest_kind += 'b'
+  contest_kind += 'c'
+  return contest_kind
+
+def get_contest_number(kind):
+  contest_num = 0
+  if kind == 'abc':
+    contest_num = random.randint(1,contest_max_abc)
+  elif kind == 'arc':
+    contest_num = random.randint(1,contest_max_arc)
+  else:
+    contest_num = random.randint(1,contest_max_agc)
+  contest_num_string = str(contest_num)
+  contest_num_string = contest_num_string.zfill(3)
+  return contest_num_string
+
+def get_problem_number():
+  n = random.randint(0,5)
+  problem_number = chr(ord('a')+n)
+  return problem_number
+
+
+def get_url(c_str,p_str):
+  url = 'https://atcoder.jp/contests/' + c_str + '/tasks/' + p_str
+  return url
+
+def log(str):
+  if DEBUG_FLAG == True:
+    print(str)
+
+def error(str):
+  print(str)
+  #sys.exit()
+
+def generate(message):
+  path = './problem-models.json'
+
+  f = open(path, 'r')
+
+  json_load = json.load(f)
+
+  print(message.content)
+#  args = sys.argv
+  args = message.content.split()
+  """
+  log('args')
+  for arg in args:
+    log(arg)
+  log('')
+  """
+
+
+  lower = -10000
+  upper = 10000
+
+  if len(args) >= 2:
+    if args[1] != 'def':
+      if args[1] == 'GRY' or args[1] == '灰':
+        upper = 399
+      elif args[1] == 'BRN' or args[1] == '茶':
+        lower = 400
+        upper = 799
+      elif args[1] == 'GRN' or args[1] == '緑':
+        lower = 800
+        upper = 1199
+      elif args[1] == 'AQU' or args[1] == '水':
+        lower = 1200
+        upper = 1599
+      elif args[1] == 'BLU' or args[1] == '青':
+        lower = 1600
+        upper = 1999
+      elif args[1] == 'YEL' or args[1] == '黃':
+        lower = 2000
+        upper = 2399
+      elif args[1] == 'ORN' or args[1] == '橙':
+        lower = 2400
+        upper = 2799
+      elif args[1] == 'RED' or args[1] == '赤':
+        lower = 2800
+        upper = 3199
+      elif args[1] == 'SIL' or args[1] == '銀':
+        lower = 3200
+        upper = 3599
+      elif args[1] == 'GLD' or args[1] == '金':
+        lower = 3600
+      else:
+        if args[1].isdecimal():
+          lower = int(args[1])
+    if len(args) >= 3:
+      if args[2] != 'def':
+        if args[2].isdecimal():
+          upper = int(args[2])
+
+  if lower > upper:
+    error('difficulty setting error')
+    return
+
+  log('lower limit:'+str(lower))
+  log('upper limit:'+str(upper))
+
+  s = ''
+  sc = ''
+  search_count = 0
+  search_limit = 1000
+  search_flag = False
+  while search_count < search_limit:
+    sc = get_contest_kind()
+    sc += get_contest_number(sc)
+    sn = get_problem_number()
+    s = sc + '_' + sn
+    if s in json_load:
+      difficulty = json_load[s].get('difficulty','not found')
+      if difficulty == 'not found':
+        log('difficulty not found')
+        continue
+      if lower <= difficulty and difficulty <= upper:
+        print(json_load[s]['difficulty'])
+        break
+    else:
+      log('problem not found')
+    search_count += 1
+    if search_count == search_limit:
+      search_flag = True
+
+  log('')
+
+  f.close()
+
+  if search_flag:
+    return ''
+
+  url = get_url(sc,s)
+  print(url)
+
+  return url
+
+
+# 起動時に動作する処理
+@client.event
+async def on_ready():
+    print('ログインしました')
+
+async def reply(message):
+#    reply = f'{message.author.mention} called?'
+    url = generate(message)
+    #reply = f'{message.author.mention} '
+    #reply += url
+    reply = url
+    if reply != '':
+      await message.channel.send(reply)
+
+# メッセージ受信時に動作する処理
+@client.event
+async def on_message(message):
+    # メッセージ送信者がBotだった場合は無視する
+#    if message.author.bot:
+#        return
+
+    if client.user in message.mentions:
+        await reply(message)
+
+#    if message.content == '/neko':
+#        await message.channel.send('にゃーん')
+
+def main():
+  token_file = open(TOKEN_PATH, 'r')
+  TOKEN = token_file.read()
+  token_file.close()
+  # Botの起動とDiscordサーバーへの接続
+  client.run(TOKEN)
+
+if __name__ == '__main__':
+  main()
+
