@@ -17,7 +17,7 @@ contest_max_agc = 0
 
 client = discord.Client()
 
-data = None
+data = ''
 
 def get_atcoder_problems_api():
   global data
@@ -25,6 +25,12 @@ def get_atcoder_problems_api():
 #  print(resp.status_code)
   json_load = resp.json()
   data = resp.json()
+
+def get_atcoder_problems_api_locally():
+  global data
+  path = './problem-models.json'
+  f = open(path, 'r')
+  data = json.load(f)
 
 def get_token():
   global TOKEN
@@ -234,7 +240,8 @@ async def on_message(message):
 #        await message.channel.send('にゃーん')
 
 def main():
-  get_atcoder_problems_api()
+  #get_atcoder_problems_api()
+  get_atcoder_problems_api_locally()
   #get_token()
   set_contest_num_max()
   # Botの起動とDiscordサーバーへの接続
