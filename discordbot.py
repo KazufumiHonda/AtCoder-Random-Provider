@@ -9,7 +9,7 @@ import os
 
 #TOKEN_PATH = './token.txt'
 
-TOKEN = os.environ.get('BOT_TOKEN')
+TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
 DEBUG_FLAG = False
 contest_max_abc = 0
 contest_max_arc = 0
