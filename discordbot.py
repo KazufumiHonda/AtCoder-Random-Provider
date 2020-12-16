@@ -240,8 +240,8 @@ async def on_message(message):
 #        await message.channel.send('にゃーん')
 
 def main():
-  get_atcoder_problems_api()
-  #get_atcoder_problems_api_locally()
+  #get_atcoder_problems_api()
+  get_atcoder_problems_api_locally()
   #get_token()
   set_contest_num_max()
   # Botの起動とDiscordサーバーへの接続
