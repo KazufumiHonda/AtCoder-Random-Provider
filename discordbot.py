@@ -3,16 +3,53 @@ import json
 from collections import OrderedDict
 import random
 import sys
+import requests
+import pprint
 
 TOKEN_PATH = './token.txt'
 
 TOKEN = 'YOUR TOKEN'
 DEBUG_FLAG = False
-contest_max_abc = 190
-contest_max_arc = 60
-contest_max_agc = 40
+contest_max_abc = 0
+contest_max_arc = 0
+contest_max_agc = 0
 
 client = discord.Client()
+
+data = None
+
+def get_atcoder_problems_api():
+  global data
+  resp = requests.get('https://kenkoooo.com/atcoder/resources/problem-models.json')
+#  print(resp.status_code)
+  json_load = resp.json()
+  data = resp.json()
+
+def get_token():
+  global TOKEN
+  token_file = open(TOKEN_PATH, 'r')
+  TOKEN = token_file.read()
+  token_file.close()
+
+def set_contest_num_max():
+  global contest_max_abc,contest_max_arc,contest_max_agc
+  global data
+  for d in data.keys():
+    s_contest = d[0:3]
+    if s_contest == 'abc':
+      s_num = d[3:6]
+      contest_max_abc = max(contest_max_abc,int(s_num))
+    elif s_contest == 'arc':
+      s_num = d[3:6]
+      contest_max_arc = max(contest_max_arc,int(s_num))
+    elif s_contest == 'agc':
+      s_num = d[3:6]
+      contest_max_agc = max(contest_max_agc,int(s_num))
+  """
+  print('abc',contest_max_abc)
+  print('arc',contest_max_arc)
+  print('agc',contest_max_agc)
+  """
 
 def get_contest_kind():
   n = random.randint(1,10000)
@@ -61,11 +98,16 @@ def error(str):
   #sys.exit()
 
 def generate(message):
+#  global data
+  """
   path = './problem-models.json'
 
   f = open(path, 'r')
 
   json_load = json.load(f)
+  """
+
+  json_load = data
 
   print(message.content)
 #  args = sys.argv
@@ -152,7 +194,7 @@ def generate(message):
 
   log('')
 
-  f.close()
+  #f.close()
 
   if search_flag:
     return ''
@@ -166,7 +208,7 @@ def generate(message):
 # 起動時に動作する処理
 @client.event
 async def on_ready():
-    print('ログインしました')
+    print('started correctly')
 
 async def reply(message):
 #    reply = f'{message.author.mention} called?'
@@ -191,9 +233,9 @@ async def on_message(message):
 #        await message.channel.send('にゃーん')
 
 def main():
-  token_file = open(TOKEN_PATH, 'r')
-  TOKEN = token_file.read()
-  token_file.close()
+  get_atcoder_problems_api()
+  get_token()
+  set_contest_num_max()
   # Botの起動とDiscordサーバーへの接続
   client.run(TOKEN)
 
