@@ -3,6 +3,8 @@ import json
 from collections import OrderedDict
 import random
 import sys
+import requests
+import pprint
 
 TOKEN_PATH = './token.txt'
 
@@ -13,6 +15,21 @@ contest_max_arc = 60
 contest_max_agc = 40
 
 client = discord.Client()
+
+data = None
+
+def get_atcoder_problems_api():
+  global data
+  resp = requests.get('https://kenkoooo.com/atcoder/resources/problem-models.json')
+#  print(resp.status_code)
+  json_load = resp.json()
+  data = resp.json()
+
+def get_token():
+  global TOKEN
+  token_file = open(TOKEN_PATH, 'r')
+  TOKEN = token_file.read()
+  token_file.close()
 
 def get_contest_kind():
   n = random.randint(1,10000)
@@ -61,11 +78,16 @@ def error(str):
   #sys.exit()
 
 def generate(message):
+#  global data
+  """
   path = './problem-models.json'
 
   f = open(path, 'r')
 
   json_load = json.load(f)
+  """
+
+  json_load = data
 
   print(message.content)
 #  args = sys.argv
@@ -152,7 +174,7 @@ def generate(message):
 
   log('')
 
-  f.close()
+  #f.close()
 
   if search_flag:
     return ''
@@ -166,7 +188,7 @@ def generate(message):
 # 起動時に動作する処理
 @client.event
 async def on_ready():
-    print('ログインしました')
+    print('started correctly')
 
 async def reply(message):
 #    reply = f'{message.author.mention} called?'
@@ -191,11 +213,11 @@ async def on_message(message):
 #        await message.channel.send('にゃーん')
 
 def main():
-  token_file = open(TOKEN_PATH, 'r')
-  TOKEN = token_file.read()
-  token_file.close()
+  get_atcoder_problems_api()
+  get_token()
   # Botの起動とDiscordサーバーへの接続
   client.run(TOKEN)
+
 
 if __name__ == '__main__':
   main()
