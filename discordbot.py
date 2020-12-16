@@ -5,10 +5,11 @@ import random
 import sys
 import requests
 import pprint
+import os
 
-TOKEN_PATH = './token.txt'
+#TOKEN_PATH = './token.txt'
 
-TOKEN = 'YOUR TOKEN'
+TOKEN = os.environ.get('BOT_TOKEN')
 DEBUG_FLAG = False
 contest_max_abc = 0
 contest_max_arc = 0
@@ -234,7 +235,7 @@ async def on_message(message):
 
 def main():
   get_atcoder_problems_api()
-  get_token()
+  #get_token()
   set_contest_num_max()
   # Botの起動とDiscordサーバーへの接続
   client.run(TOKEN)
