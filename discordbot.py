@@ -10,9 +10,9 @@ TOKEN_PATH = './token.txt'
 
 TOKEN = 'YOUR TOKEN'
 DEBUG_FLAG = False
-contest_max_abc = 190
-contest_max_arc = 60
-contest_max_agc = 40
+contest_max_abc = 0
+contest_max_arc = 0
+contest_max_agc = 0
 
 client = discord.Client()
 
@@ -30,6 +30,26 @@ def get_token():
   token_file = open(TOKEN_PATH, 'r')
   TOKEN = token_file.read()
   token_file.close()
+
+def set_contest_num_max():
+  global contest_max_abc,contest_max_arc,contest_max_agc
+  global data
+  for d in data.keys():
+    s_contest = d[0:3]
+    if s_contest == 'abc':
+      s_num = d[3:6]
+      contest_max_abc = max(contest_max_abc,int(s_num))
+    elif s_contest == 'arc':
+      s_num = d[3:6]
+      contest_max_arc = max(contest_max_arc,int(s_num))
+    elif s_contest == 'agc':
+      s_num = d[3:6]
+      contest_max_agc = max(contest_max_agc,int(s_num))
+  """
+  print('abc',contest_max_abc)
+  print('arc',contest_max_arc)
+  print('agc',contest_max_agc)
+  """
 
 def get_contest_kind():
   n = random.randint(1,10000)
@@ -215,9 +235,9 @@ async def on_message(message):
 def main():
   get_atcoder_problems_api()
   get_token()
+  set_contest_num_max()
   # Botの起動とDiscordサーバーへの接続
   client.run(TOKEN)
-
 
 if __name__ == '__main__':
   main()
