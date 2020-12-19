@@ -1,4 +1,4 @@
-# AtCoder Random Problem Provider
+# AtCoder Random Provider
 ## 概要
 - discord bot
 - AtCoderの問題を無作為に1問選んでくれるBot
@@ -8,7 +8,7 @@
 - 返す問題はABC,ARC,AGCの中から選ばれる
 - 難易度選択
      - difficultyを数値で指定
-          - @AtCoder Random Problem Provider 下限 上限
+          - @AtCoder Random Provider 下限 上限
           - 下限・上限は数値で指定
           - デフォルト値の場合は def と指定
      - difficultyを色で指定
@@ -22,3 +22,4 @@
           - 銀diff:銀 または SIL
           - 金diff:金 または GLD
      - 指定しない場合は全範囲から無作為に選択される
+- @AtCoder Random Provider help / ヘルプ　で使い方を表示
