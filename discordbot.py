@@ -6,6 +6,7 @@ import sys
 import requests
 import pprint
 import os
+import time
 
 #TOKEN_PATH = './token.txt'
 
@@ -23,6 +24,7 @@ help = "AtCoderの問題(ABC,ARC,AGC)を無作為に1問返します\n〇使い�
 
 def get_atcoder_problems_api():
   global data
+  time.sleep(1)
   resp = requests.get('https://kenkoooo.com/atcoder/resources/problem-models.json')
 #  print(resp.status_code)
   json_load = resp.json()
