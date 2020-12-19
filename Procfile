@@ -1,1 +1,1 @@
-web: python3.7 discordbot.py
+worker: python3.7 discordbot.py
