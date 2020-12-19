@@ -18,27 +18,8 @@ contest_max_agc = 0
 client = discord.Client()
 
 data = ''
-help = 'AtCoderの問題(ABC,ARC,AGC)を無作為に1問返します
-〇使い方
-メンションする
-@AtCoder Random Problem Provider
+help = "AtCoderの問題(ABC,ARC,AGC)を無作為に1問返します\n〇使い方\nメンションする\n@AtCoder Random Problem Provider\n〇引数で難易度(difficulty)指定も可能です\n・数値指定\n@AtCoder Random Problem Provider  (difficultyの下限)  (difficultyの上限)\n・色指定\n@AtCoder Random Problem Provider  色\n各色のdiffに対する引数は以下の通りです\n灰diff：灰 または GRY\n茶diff：茶 または BRN\n緑diff：緑 または GRN\n水diff：水 または AQU\n青diff：青 または BLU\n黃diff：黃 または YEL\n赤diff：赤 または RED\n銀diff：銀 または SIL\n金diff：金 または GLD\n"
 
-〇引数で難易度(difficulty)指定も可能です
-・数値指定
-@AtCoder Random Problem Provider  (difficultyの下限)  (difficultyの上限)
-・色指定
-@AtCoder Random Problem Provider  色
-各色のdiffに対する引数は以下の通りです
-灰diff：灰 または GRY
-茶diff：茶 または BRN
-緑diff：緑 または GRN
-水diff：水 または AQU
-青diff：青 または BLU
-黃diff：黃 または YEL
-赤diff：赤 または RED
-銀diff：銀 または SIL
-金diff：金 または GLD
-'
 
 def get_atcoder_problems_api():
   global data
